@@ -1,5 +1,6 @@
 package com.smg.tokosmg.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,7 +33,7 @@ import com.smg.tokosmg.ui.components.ErrorContainer
 import com.smg.tokosmg.ui.components.ErrorText
 import com.smg.tokosmg.ui.theme.Gradient2
 import com.smg.tokosmg.ui.theme.TextGrey
-import com.smg.tokosmg.ui.theme.latoFontFamily
+import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun RegisterScreen (
@@ -44,7 +47,8 @@ fun RegisterScreen (
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest),
             verticalArrangement = Arrangement.Center,
         ) {
             if (registerViewModel.registerUIState.errorFromFirebase != null) {
@@ -119,7 +123,7 @@ fun RegisterScreen (
                 Text(
                     text = "Apakah sudah memiliki akun?",
                     fontSize = 16.sp,
-                    fontFamily = latoFontFamily,
+                    fontFamily = interFontFamily,
                     fontWeight = FontWeight.Normal,
                     color = TextGrey
                 )
@@ -128,7 +132,7 @@ fun RegisterScreen (
                     modifier = Modifier.clickable {  },
                     text = "Masuk",
                     fontSize = 16.sp,
-                    fontFamily = latoFontFamily,
+                    fontFamily = interFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Gradient2
                 )
@@ -136,3 +140,4 @@ fun RegisterScreen (
         }
     }
 }
+

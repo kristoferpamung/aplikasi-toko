@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smg.tokosmg.ui.theme.Gradient1
 import com.smg.tokosmg.ui.theme.Gradient2
-import com.smg.tokosmg.ui.theme.latoFontFamily
+import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun CustomButton(
@@ -33,12 +33,16 @@ fun CustomButton(
             .padding(horizontal = 24.dp)
             .fillMaxWidth()
             .height(56.dp)
-            .shadow(24.dp, spotColor = Gradient2, ambientColor = Gradient2, shape = MaterialTheme.shapes.extraSmall)
+            .shadow(
+                elevation = 8.dp,
+                spotColor = MaterialTheme.colorScheme.primary,
+                ambientColor = MaterialTheme.colorScheme.primary,
+                shape = MaterialTheme.shapes.extraSmall)
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Gradient1,
-                        Gradient2
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
+                        MaterialTheme.colorScheme.primary
                     )
                 )
             )
@@ -51,9 +55,9 @@ fun CustomButton(
             text = text,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = latoFontFamily,
+            fontFamily = interFontFamily,
             letterSpacing = TextUnit(1.2f, TextUnitType.Sp),
-            color = Color.White
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

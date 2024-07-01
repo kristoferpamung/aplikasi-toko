@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smg.tokosmg.ui.theme.latoFontFamily
+import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun ErrorText (errorMessage: String) {
@@ -18,7 +18,7 @@ fun ErrorText (errorMessage: String) {
             .padding(horizontal = 24.dp),
         text = "* $errorMessage",
         fontSize = 14.sp,
-        fontFamily = latoFontFamily,
+        fontFamily = interFontFamily,
         color = MaterialTheme.colorScheme.error
     )
 }

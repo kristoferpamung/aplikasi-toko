@@ -43,12 +43,11 @@ class LoginViewModel (
             val hasError = listOf(
                 emailResult,
                 passwordResult
-            ).any {!it.successful}
+            ).any { !it.successful }
 
             if (hasError) {
                 loginUIState = loginUIState.copy(
                     emailError = emailResult.errorMessage,
-                    passwordError = passwordResult.errorMessage
                 )
             } else {
                 loginUIState = loginUIState.copy(

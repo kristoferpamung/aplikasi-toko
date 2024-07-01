@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +33,7 @@ import com.smg.tokosmg.R
 import com.smg.tokosmg.ui.theme.Gradient1
 import com.smg.tokosmg.ui.theme.TextBlack
 import com.smg.tokosmg.ui.theme.TextGrey
-import com.smg.tokosmg.ui.theme.latoFontFamily
+import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun CustomTextField(
@@ -54,7 +55,7 @@ fun CustomTextField(
             fontSize = 16.sp,
             color = TextGrey,
             fontWeight = FontWeight.Bold,
-            fontFamily = latoFontFamily
+            fontFamily = interFontFamily
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
@@ -67,13 +68,11 @@ fun CustomTextField(
             placeholder = {
                 Text(
                     text = placeholder,
-                    fontFamily = latoFontFamily
+                    fontFamily = interFontFamily
                 )
             },
             shape = MaterialTheme.shapes.extraSmall,
             colors = TextFieldDefaults.colors(
-                unfocusedIndicatorColor = TextGrey,
-                focusedIndicatorColor = Gradient1,
                 focusedTextColor = TextBlack,
                 unfocusedTextColor = TextBlack,
                 unfocusedPlaceholderColor = TextGrey,
@@ -85,7 +84,7 @@ fun CustomTextField(
             textStyle = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                fontFamily = latoFontFamily
+                fontFamily = interFontFamily
             ),
             isError = isError,
             keyboardOptions = KeyboardOptions(
@@ -118,7 +117,7 @@ fun CustomPasswordTextField(
             fontSize = 16.sp,
             color = TextGrey,
             fontWeight = FontWeight.Bold,
-            fontFamily = latoFontFamily
+            fontFamily = interFontFamily
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
@@ -131,13 +130,11 @@ fun CustomPasswordTextField(
             placeholder = {
                 Text(
                     text = placeholder,
-                    fontFamily = latoFontFamily
+                    fontFamily = interFontFamily
                 )
             },
             shape = MaterialTheme.shapes.extraSmall,
             colors = TextFieldDefaults.colors(
-                unfocusedIndicatorColor = TextGrey,
-                focusedIndicatorColor = Gradient1,
                 focusedTextColor = TextBlack,
                 unfocusedTextColor = TextBlack,
                 unfocusedPlaceholderColor = TextGrey,
@@ -145,12 +142,11 @@ fun CustomPasswordTextField(
                 unfocusedContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent,
                 errorPlaceholderColor = MaterialTheme.colorScheme.error
-
             ),
             textStyle = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                fontFamily = latoFontFamily
+                fontFamily = interFontFamily
             ),
             isError = isError,
             keyboardOptions = KeyboardOptions(
@@ -163,7 +159,17 @@ fun CustomPasswordTextField(
                         passwordVisibility = !passwordVisibility
                     }
                 ) {
-                    if (passwordVisibility) Icon(painter = painterResource(id = R.drawable.eye_slash), contentDescription = "Password Visibility ON") else Icon(painter = painterResource(id = R.drawable.eye), contentDescription = "Password Visibility OFF")
+                    if (passwordVisibility)
+                        Icon(
+                            painter = painterResource(id = R.drawable.eye_slash_fill),
+                            contentDescription = "Password Visibility ON",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    else Icon(
+                        painter = painterResource(id = R.drawable.eye_fill),
+                        contentDescription = "Password Visibility OFF",
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
             }
         )

@@ -1,6 +1,7 @@
 package com.smg.tokosmg.ui.screens
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +33,7 @@ import com.smg.tokosmg.ui.components.ErrorContainer
 import com.smg.tokosmg.ui.components.ErrorText
 import com.smg.tokosmg.ui.theme.Gradient2
 import com.smg.tokosmg.ui.theme.TextGrey
-import com.smg.tokosmg.ui.theme.latoFontFamily
+import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun LoginScreen (
@@ -42,7 +44,8 @@ fun LoginScreen (
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest),
             verticalArrangement = Arrangement.Center
         ) {
             if (loginViewModel.loginUIState.errorFromFirebase != null) {
@@ -90,7 +93,7 @@ fun LoginScreen (
                 Text(
                     text = "Apakah belum memiliki akun?",
                     fontSize = 16.sp,
-                    fontFamily = latoFontFamily,
+                    fontFamily = interFontFamily,
                     fontWeight = FontWeight.Normal,
                     color = TextGrey
                 )
@@ -99,9 +102,9 @@ fun LoginScreen (
                     modifier = Modifier.clickable {  },
                     text = "Mendaftar",
                     fontSize = 16.sp,
-                    fontFamily = latoFontFamily,
+                    fontFamily = interFontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = Gradient2
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

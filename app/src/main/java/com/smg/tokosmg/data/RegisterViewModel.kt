@@ -7,12 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.smg.tokosmg.repository.AuthRepository
+import com.smg.tokosmg.repository.StorageRepository
 import com.smg.tokosmg.util.FormValidator
 import kotlinx.coroutines.launch
 
 class RegisterViewModel (
     private val authRepository: AuthRepository = AuthRepository(),
+    private val storageRepository: StorageRepository = StorageRepository(),
     private val formValidator: FormValidator = FormValidator()
 ) : ViewModel () {
     var registerUIState by mutableStateOf(RegisterUIState())
@@ -79,7 +82,16 @@ class RegisterViewModel (
                     password = registerUIState.password
                 ) { isSuccessful ->
                     if (isSuccessful) {
-                        Toast.makeText(context, "Berhasil Mendaftarkan Akun", Toast.LENGTH_LONG).show()
+                        storageRepository.addUser(
+                            email = registerUIState.email,
+                            registerDate = Timestamp.now(),
+                            fullName = registerUIState.fullName,
+                            userId = authRepository.getUserId()
+                        ) {
+                            if (it) {
+                                Toast.makeText(context, "Berhasil Mendaftarkan Akun", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     } else {
                         Toast.makeText(context, "Gagal Mendaftarkan Akun", Toast.LENGTH_LONG).show()
                     }

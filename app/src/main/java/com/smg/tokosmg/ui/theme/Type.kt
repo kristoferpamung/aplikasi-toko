@@ -9,13 +9,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.smg.tokosmg.R
 
-val latoFontFamily = FontFamily(
-    Font(R.font.lato_thin, FontWeight.Thin),
-    Font(R.font.lato_light, FontWeight.Light),
-    Font(R.font.lato_regular, FontWeight.Normal),
-    Font(R.font.lato_italic, FontWeight.Normal, FontStyle.Italic),
-    Font(R.font.lato_bold, FontWeight.Bold),
-    Font(R.font.lato_black, FontWeight.Black)
+val interFontFamily = FontFamily(
+    Font(R.font.inter_thin, FontWeight.Thin),
+    Font(R.font.inter_light, FontWeight.Light),
+    Font(R.font.inter_medium, FontWeight.Medium),
+    Font(R.font.inter_regular, FontWeight.Normal),
+    Font(R.font.inter_semibold, FontWeight.SemiBold),
+    Font(R.font.inter_bold, FontWeight.Bold),
+    Font(R.font.inter_black, FontWeight.Black)
 )
 
 // Set of Material typography styles to start with
