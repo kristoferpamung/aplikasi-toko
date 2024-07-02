@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.smg.tokosmg.ui.screens.HomeScreen
+import com.smg.tokosmg.ui.screens.KeranjangScreen
 import com.smg.tokosmg.ui.screens.LoginScreen
 import com.smg.tokosmg.ui.screens.RegisterScreen
 import com.smg.tokosmg.ui.theme.TokoSMGTheme

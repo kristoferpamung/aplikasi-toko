@@ -2,14 +2,11 @@ package com.smg.tokosmg.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.smg.tokosmg.R
-import com.smg.tokosmg.ui.screens.BernadaScreen
+import com.smg.tokosmg.ui.screens.BerandaScreen
 import com.smg.tokosmg.ui.screens.KeranjangScreen
 import com.smg.tokosmg.ui.screens.TransaksiScreen
 
@@ -24,7 +21,7 @@ fun HomeNavGraph (
         startDestination = BottomAppSceen.BerandaScreen.route
     ) {
         composable(route = BottomAppSceen.BerandaScreen.route) {
-            BernadaScreen(paddingValues = paddingValues)
+            BerandaScreen(paddingValues = paddingValues)
         }
         composable(route = BottomAppSceen.KeranjangScreen.route) {
             KeranjangScreen()
