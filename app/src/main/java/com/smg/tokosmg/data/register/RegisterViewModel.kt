@@ -1,6 +1,7 @@
-package com.smg.tokosmg.data
+package com.smg.tokosmg.data.register
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,10 @@ class RegisterViewModel (
     private val storageRepository: StorageRepository = StorageRepository(),
     private val formValidator: FormValidator = FormValidator()
 ) : ViewModel () {
+
+    val hasUser : Boolean
+        get() = authRepository.hasUser()
+
     var registerUIState by mutableStateOf(RegisterUIState())
         private set
 
@@ -82,14 +87,15 @@ class RegisterViewModel (
                     password = registerUIState.password
                 ) { isSuccessful ->
                     if (isSuccessful) {
-                        storageRepository.addUser(
+                        Toast.makeText(context, "Berhasil Mendaftarkan Akun", Toast.LENGTH_LONG).show()
+                        storageRepository.tambahPengguna(
+                            userId = authRepository.getUserId(),
                             email = registerUIState.email,
-                            registerDate = Timestamp.now(),
-                            fullName = registerUIState.fullName,
-                            userId = authRepository.getUserId()
-                        ) {
-                            if (it) {
-                                Toast.makeText(context, "Berhasil Mendaftarkan Akun", Toast.LENGTH_LONG).show()
+                            nama = registerUIState.fullName,
+                            tanggalDaftar = Timestamp.now()
+                        ) { isOk ->
+                            if (isOk) {
+                                Log.d("Firestore", "registerUser: Berhasil menambahkan data")
                             }
                         }
                     } else {
@@ -114,10 +120,8 @@ class RegisterViewModel (
             e.printStackTrace()
         } finally {
             registerUIState = registerUIState.copy(
-                isLoading = false,
-                errorFromFirebase = null
+                isLoading = false
             )
         }
     }
-
 }

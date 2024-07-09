@@ -1,4 +1,4 @@
-package com.smg.tokosmg.data
+package com.smg.tokosmg.data.login
 
 data class LoginUIState (
     var email: String = "",

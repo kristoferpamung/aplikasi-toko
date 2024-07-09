@@ -6,28 +6,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.smg.tokosmg.R
-import com.smg.tokosmg.ui.screens.BerandaScreen
-import com.smg.tokosmg.ui.screens.KeranjangScreen
-import com.smg.tokosmg.ui.screens.TransaksiScreen
+import com.smg.tokosmg.data.beranda.BerandaScreen
+import com.smg.tokosmg.data.keranjang.KeranjangScreen
+import com.smg.tokosmg.data.transaksi.TransaksiScreen
 
 @Composable
-fun HomeNavGraph (
+fun BottomNavGraph (
     navController: NavHostController,
-    paddingValues: PaddingValues
+    padding: PaddingValues
 ) {
     NavHost(
         navController = navController,
-        route = Graph.HOME,
-        startDestination = BottomAppSceen.BerandaScreen.route
+        startDestination = HomeRoutes.Beranda.name,
+        route = NestedRoutes.Main.name
     ) {
-        composable(route = BottomAppSceen.BerandaScreen.route) {
-            BerandaScreen(paddingValues = paddingValues)
+        composable(
+            route = HomeRoutes.Beranda.name
+        ) {
+            BerandaScreen(padding = padding)
         }
-        composable(route = BottomAppSceen.KeranjangScreen.route) {
-            KeranjangScreen()
+        composable(
+            route = HomeRoutes.Keranjang.name
+        ) {
+            KeranjangScreen(padding = padding)
         }
-        composable(route = BottomAppSceen.TransaksiScreen.route) {
-            TransaksiScreen()
+        composable(
+            route = HomeRoutes.Transaksi.name
+        ) {
+            TransaksiScreen(padding = padding)
         }
     }
 }
@@ -39,20 +45,20 @@ sealed class BottomAppSceen (
     val unselectedIcon: Int
 ) {
     object BerandaScreen: BottomAppSceen(
-        route = "BERANDA",
+        route = HomeRoutes.Beranda.name,
         label = "Beranda",
         selectedIcon = R.drawable.house_door_fill,
         unselectedIcon = R.drawable.house_door
     )
     object KeranjangScreen: BottomAppSceen(
-        route = "KERANJANG",
+        route = HomeRoutes.Keranjang.name,
         label = "Keranjang",
         selectedIcon = R.drawable.cart_fill,
         unselectedIcon = R.drawable.cart
     )
     object TransaksiScreen: BottomAppSceen(
-        route = "TRANSAKSI",
-        label = "Transaksi",
+        route = HomeRoutes.Transaksi.name,
+        label = "Pesanan",
         selectedIcon = R.drawable.bag_check_fill,
         unselectedIcon = R.drawable.bag_check
     )

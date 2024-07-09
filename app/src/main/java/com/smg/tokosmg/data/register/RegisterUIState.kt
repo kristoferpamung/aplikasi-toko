@@ -1,4 +1,4 @@
-package com.smg.tokosmg.data
+package com.smg.tokosmg.data.register
 
 data class RegisterUIState (
     var fullName: String = "",
@@ -13,4 +13,3 @@ data class RegisterUIState (
     var isLoading : Boolean = false,
     var errorFromFirebase: String? = null
 )
-

@@ -3,9 +3,13 @@ package com.smg.tokosmg.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +30,8 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 @Composable
 fun CustomButton(
     onClick: () -> Unit,
-    text: String
+    text: String,
+    isLoading: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -37,12 +42,13 @@ fun CustomButton(
                 elevation = 8.dp,
                 spotColor = MaterialTheme.colorScheme.primary,
                 ambientColor = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.extraSmall)
+                shape = MaterialTheme.shapes.extraSmall
+            )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
+                        MaterialTheme.colorScheme.primaryContainer
                     )
                 )
             )
@@ -51,13 +57,23 @@ fun CustomButton(
             },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = interFontFamily,
-            letterSpacing = TextUnit(1.2f, TextUnitType.Sp),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = interFontFamily,
+                letterSpacing = TextUnit(1.2f, TextUnitType.Sp),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            if (isLoading) {
+                Spacer(modifier = Modifier.width(8.dp))
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.surfaceContainerLowest
+                )
+            }
+        }
     }
 }

@@ -1,7 +1,8 @@
-package com.smg.tokosmg.ui.screens
+package com.smg.tokosmg.data.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,22 +11,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.smg.tokosmg.data.RegisterUIEvent
-import com.smg.tokosmg.data.RegisterViewModel
+import com.smg.tokosmg.R
 import com.smg.tokosmg.ui.components.CustomButton
 import com.smg.tokosmg.ui.components.CustomPasswordTextField
 import com.smg.tokosmg.ui.components.CustomTextField
@@ -37,20 +44,37 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 
 @Composable
 fun RegisterScreen (
-    registerViewModel: RegisterViewModel = viewModel()
+    registerViewModel: RegisterViewModel = viewModel(modelClass = RegisterViewModel::class.java),
+    navigateToHome : () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
 
     val context = LocalContext.current
 
-    Scaffold { padding ->
+    Scaffold {
 
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                .padding(it)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
         ) {
+            Column (modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Icon(modifier = Modifier.size(32.dp), painter = painterResource(id = R.drawable.shop), contentDescription = "", tint = MaterialTheme.colorScheme.primaryContainer)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "SUKSES MAKMUR GEMILANG", style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = interFontFamily,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(56.dp))
             if (registerViewModel.registerUIState.errorFromFirebase != null) {
                 ErrorContainer(errorMessage = registerViewModel.registerUIState.errorFromFirebase!!)
             }
@@ -112,7 +136,8 @@ fun RegisterScreen (
                 onClick = {
                     registerViewModel.onEvent(RegisterUIEvent.RegisterButtonClicked(context))
                 },
-                text = "Daftar Akun"
+                text = "Daftar Akun",
+                isLoading = registerViewModel.registerUIState.isLoading
             )
             Spacer(modifier = Modifier.height(64.dp))
             Row (
@@ -129,15 +154,21 @@ fun RegisterScreen (
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    modifier = Modifier.clickable {  },
+                    modifier = Modifier.clickable {
+                        navigateToLogin.invoke()
+                    },
                     text = "Masuk",
                     fontSize = 16.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = Gradient2
+                    color = MaterialTheme.colorScheme.primary
                 )
+            }
+            LaunchedEffect(key1 = registerViewModel.hasUser) {
+                if (registerViewModel.hasUser) {
+                    navigateToHome.invoke()
+                }
             }
         }
     }
 }
-

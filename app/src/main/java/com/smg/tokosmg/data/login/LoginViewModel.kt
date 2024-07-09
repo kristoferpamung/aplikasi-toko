@@ -1,4 +1,4 @@
-package com.smg.tokosmg.data
+package com.smg.tokosmg.data.login
 
 import android.content.Context
 import android.widget.Toast
@@ -15,6 +15,10 @@ class LoginViewModel (
     private val authRepository: AuthRepository = AuthRepository(),
     private val formValidator: FormValidator = FormValidator()
 ) : ViewModel() {
+
+    val hasUser : Boolean
+        get() = authRepository.hasUser()
+
     var loginUIState by mutableStateOf(LoginUIState())
 
     fun onEvent(event: LoginUIEvent) {
@@ -38,7 +42,7 @@ class LoginViewModel (
     private fun loginUser(context: Context) = viewModelScope.launch {
         try {
             val emailResult = formValidator.isEmailValid(loginUIState.email)
-            val passwordResult = formValidator.isPasswordValid(loginUIState.password)
+            val passwordResult = formValidator.isPasswordEmpty(loginUIState.password)
 
             val hasError = listOf(
                 emailResult,
@@ -48,6 +52,7 @@ class LoginViewModel (
             if (hasError) {
                 loginUIState = loginUIState.copy(
                     emailError = emailResult.errorMessage,
+                    passwordError = passwordResult.errorMessage
                 )
             } else {
                 loginUIState = loginUIState.copy(
@@ -55,7 +60,11 @@ class LoginViewModel (
                     emailError = null,
                     passwordError = null
                 )
-                authRepository.loginUser(email = loginUIState.email, password = loginUIState.password){ isSuccessful ->
+
+                authRepository.loginUser(
+                    email = loginUIState.email,
+                    password = loginUIState.password
+                ){ isSuccessful ->
                     if(isSuccessful) {
                         Toast.makeText(context, "Login Berhasil", Toast.LENGTH_LONG).show()
                     } else {
@@ -80,8 +89,7 @@ class LoginViewModel (
             e.stackTrace
         } finally {
             loginUIState = loginUIState.copy(
-                isLoading = false,
-                errorFromFirebase = null
+                isLoading = false
             )
         }
     }

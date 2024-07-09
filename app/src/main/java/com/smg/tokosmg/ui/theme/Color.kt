@@ -79,3 +79,7 @@ val Gradient2 = Color(0xFF2948FF)
 
 val TextBlack = Color(0xFF030712)
 val TextGrey = Color(0xFF6C7278)
+
+val waiting = Color(0xff0ea5e9)
+val success = Color(0xff22c55e)
+val failed = Color(0xffef4444)

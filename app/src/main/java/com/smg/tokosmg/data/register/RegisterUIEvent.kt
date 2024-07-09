@@ -1,4 +1,4 @@
-package com.smg.tokosmg.data
+package com.smg.tokosmg.data.register
 
 import android.content.Context
 

@@ -9,19 +9,20 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class AuthRepository {
-    private val currentUser : FirebaseUser? = Firebase.auth.currentUser
+    val currentUser : FirebaseUser? = Firebase.auth.currentUser
 
-    fun hasUser() = currentUser != null
-    fun getUserId() = currentUser?.uid.orEmpty()
+    fun hasUser() : Boolean = Firebase.auth.currentUser != null
+
+    fun getUserId() : String = Firebase.auth.currentUser?.uid.orEmpty()
 
     suspend fun createUser(
         email: String,
         password: String,
-        onCompleted: (Boolean) -> Unit
+        onCompleted: (Boolean) -> Unit,
     ): AuthResult = withContext(Dispatchers.IO) {
         Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     onCompleted.invoke(true)
                 } else {
                     onCompleted.invoke(false)
@@ -41,10 +42,9 @@ class AuthRepository {
                 } else {
                     onCompleted.invoke(false)
                 }
-            }.await()
+            }
+            .await()
     }
 
-    suspend fun logOut() = withContext(Dispatchers.IO) {
-        Firebase.auth.signOut()
-    }
+    fun logOut() = Firebase.auth.signOut()
 }

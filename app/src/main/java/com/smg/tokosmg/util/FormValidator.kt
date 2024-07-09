@@ -76,4 +76,17 @@ class FormValidator {
             )
         }
     }
+
+    fun isPasswordEmpty (value : String) : ValidationResult {
+        return if (value.isBlank()) {
+            ValidationResult(
+                successful = false,
+                errorMessage = "Password tidak boleh kosong!"
+            )
+        } else {
+            ValidationResult(
+                successful = true
+            )
+        }
+    }
 }

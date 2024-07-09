@@ -79,6 +79,7 @@ fun CustomTextField(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
                 errorPlaceholderColor = MaterialTheme.colorScheme.error
             ),
             textStyle = TextStyle(
@@ -141,7 +142,8 @@ fun CustomPasswordTextField(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent,
-                errorPlaceholderColor = MaterialTheme.colorScheme.error
+                focusedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                errorPlaceholderColor = MaterialTheme.colorScheme.error,
             ),
             textStyle = TextStyle(
                 fontSize = 20.sp,
