@@ -18,7 +18,7 @@ class KeranjangViewModel(
 ) : ViewModel() {
 
     val penggunaRef = Firebase.firestore.collection("users").document(authRepository.getUserId())
-    val transaksiRef = Firebase.firestore.collection("transaksi").document()
+    val transaksiRef = Firebase.firestore.collection("transaksi")
 
     fun updateJumlahProduk (produkItem : ProdukItem, jumlahBaru : Int) {
         viewModelScope.launch {
@@ -83,7 +83,7 @@ class KeranjangViewModel(
             val transaksiUserId = transaksi.copy(
                 idPengguna = authRepository.getUserId()
             )
-            transaksiRef.set(transaksiUserId)
+            transaksiRef.add(transaksiUserId)
                 .addOnSuccessListener {
                     Toast.makeText( context,"Berhasil menambahkan pesanan", Toast.LENGTH_LONG).show()
                     hapusSemuaItem()

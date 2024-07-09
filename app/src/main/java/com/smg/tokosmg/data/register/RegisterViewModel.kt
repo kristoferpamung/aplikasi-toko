@@ -12,6 +12,7 @@ import com.google.firebase.Timestamp
 import com.smg.tokosmg.repository.AuthRepository
 import com.smg.tokosmg.repository.StorageRepository
 import com.smg.tokosmg.util.FormValidator
+import com.smg.tokosmg.util.formatNama
 import kotlinx.coroutines.launch
 
 class RegisterViewModel (
@@ -91,7 +92,7 @@ class RegisterViewModel (
                         storageRepository.tambahPengguna(
                             userId = authRepository.getUserId(),
                             email = registerUIState.email,
-                            nama = registerUIState.fullName,
+                            nama = formatNama(registerUIState.fullName),
                             tanggalDaftar = Timestamp.now()
                         ) { isOk ->
                             if (isOk) {

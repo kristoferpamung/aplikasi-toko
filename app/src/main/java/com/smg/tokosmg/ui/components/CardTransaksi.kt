@@ -63,6 +63,12 @@ fun CardTransaksi (transaksi: Transaksi) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
+            Text(text = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Invoice : ")
+                }
+                append(transaksi.idTransaksi)
+            })
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

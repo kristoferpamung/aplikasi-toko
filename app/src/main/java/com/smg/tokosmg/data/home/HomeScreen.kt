@@ -36,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +58,8 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 fun HomeScreen (
     homeViewModel: HomeViewModel = viewModel(HomeViewModel::class.java),
     navigateToLogin: () -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToNotification: () -> Unit
 ) {
     val navController = rememberNavController()
 
@@ -84,7 +87,9 @@ fun HomeScreen (
                 },
                 actions = {
                     IconButton(
-                        onClick = {  }
+                        onClick = {
+                            navigateToNotification.invoke()
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.bell_fill),
@@ -189,6 +194,10 @@ fun HomeScreen (
                             color = MaterialTheme.colorScheme.surface,
                             shape = MaterialTheme.shapes.medium
                         )
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = MaterialTheme.shapes.medium
+                        )
                 ) {
                     Column (
                         modifier = Modifier.padding(16.dp)
@@ -206,10 +215,12 @@ fun HomeScreen (
                                 navigateToLogin.invoke()
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.onErrorContainer
+                                containerColor = MaterialTheme.colorScheme.error
                             )
                         ) {
                             Text(text = "Keluar")
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(painter = painterResource(id = R.drawable.box_arrow_right), contentDescription = "", tint = Color.White)
                         }
                     }
                 }

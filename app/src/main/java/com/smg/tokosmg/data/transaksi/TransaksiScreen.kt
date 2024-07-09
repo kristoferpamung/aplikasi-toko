@@ -45,6 +45,12 @@ fun TransaksiScreen (
         mutableIntStateOf(0)
     }
 
+    val allTransaksi = transaksiViewModel.transaksiUiState.transaksiList.data
+
+    val filteredTransaksi = allTransaksi?.filter { transaksi ->
+        transaksi.statusTransaksi.contains(items[currentCategory], ignoreCase = true)
+    }
+
     Column (
         modifier = Modifier.padding(padding)
     ) {
@@ -88,8 +94,14 @@ fun TransaksiScreen (
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
             ) {
-                items(transaksiViewModel.transaksiUiState.transaksiList.data ?: emptyList()) {
-                    CardTransaksi(transaksi = it)
+                if (currentCategory == 0) {
+                    items(allTransaksi ?: emptyList() ) {
+                        CardTransaksi(transaksi = it)
+                    }
+                } else {
+                    items(filteredTransaksi ?: emptyList()) {
+                        CardTransaksi(transaksi = it)
+                    }
                 }
             }
         }

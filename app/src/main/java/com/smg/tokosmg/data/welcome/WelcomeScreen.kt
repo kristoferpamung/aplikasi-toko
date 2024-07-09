@@ -1,5 +1,7 @@
 package com.smg.tokosmg.data.welcome
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,9 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,10 +37,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.smg.tokosmg.R
 import com.smg.tokosmg.ui.components.CustomButton
 import com.smg.tokosmg.ui.theme.interFontFamily
@@ -50,7 +52,14 @@ fun WelcomeScreen (
     var checkSyarat by remember {
         mutableStateOf(true)
     }
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
     val context = LocalContext.current
+    val googleMapUri = remember { Uri.parse("https://maps.app.goo.gl/Yh87U2T9x3DkyDuQ6") }
+
     
     Scaffold {
         Image(
@@ -73,7 +82,9 @@ fun WelcomeScreen (
             Row {
                 Checkbox(checked = checkSyarat, onCheckedChange = {checkSyarat = !checkSyarat})
                 TextButton(
-                    onClick = {},
+                    onClick = {
+                        showDialog = !showDialog
+                    },
                     colors = ButtonDefaults.textButtonColors().copy(
                         contentColor = Color.White
                     )
@@ -173,6 +184,74 @@ fun WelcomeScreen (
                         color = Color.White
                     )
                 )
+            }
+
+            if(showDialog) {
+                Dialog(onDismissRequest = { showDialog = !showDialog }) {
+                    Card (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Syarat & Ketentuan",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "1. Pastikan lokasi Anda berada tidak jauh dari toko. Silakan cek lokasi toko sebelum melakukan transaksi.",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = interFontFamily
+                                )
+                            )
+
+                            TextButton(onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, googleMapUri)
+                                context.startActivity(intent)
+                            }) {
+                                Text(text = "Cek lokasi toko")
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "2. Transaksi yang tidak diambil selama hari yang sama akan dibatalkan.",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = interFontFamily
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "3. Melakukan transaksi sebanyak tiga kali berturut-turut tanpa mengambil pesanan akan mengakibatkan pemblokiran akun.",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = interFontFamily
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Button(
+                                onClick = {
+                                    showDialog = !showDialog
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                )
+                            ) {
+                                Text(text = "Saya mengerti")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
