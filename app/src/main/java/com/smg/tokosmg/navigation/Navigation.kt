@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smg.tokosmg.data.home.HomeScreen
+import com.smg.tokosmg.data.profile.ProfileScreen
 import com.smg.tokosmg.repository.AuthRepository
 import com.smg.tokosmg.ui.theme.interFontFamily
 
@@ -71,8 +72,7 @@ fun Navigation(
                         }
                     }
                 },
-                navigateToProfile = { },
-                navigateToNotification = {
+                navigateToProfile = {
                     navController.navigate(route="notification")
                 }
             )
@@ -80,39 +80,11 @@ fun Navigation(
         composable(
             route = "notification"
         ) {
-            NotificationScreen (
+            ProfileScreen (
                 navigateBack = {
                     navController.navigateUp()
                 }
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NotificationScreen (navigateBack : () -> Unit) {
-    Scaffold (
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-                ),
-                navigationIcon = {
-                    IconButton(onClick = { navigateBack.invoke() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                    }
-                },
-                title = {
-                    Text(text = "Halaman Notifikasi", color = MaterialTheme.colorScheme.primaryContainer)
-                }
-            )
-        }
-    ) {
-        LazyColumn (
-            modifier = Modifier.padding(it)
-        ) {
-
         }
     }
 }

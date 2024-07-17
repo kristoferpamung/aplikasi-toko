@@ -80,17 +80,21 @@ class KeranjangViewModel(
 
     fun simpanTransaksi(transaksi: Transaksi, context: Context) {
         viewModelScope.launch {
-            val transaksiUserId = transaksi.copy(
-                idPengguna = authRepository.getUserId()
-            )
-            transaksiRef.add(transaksiUserId)
-                .addOnSuccessListener {
-                    Toast.makeText( context,"Berhasil menambahkan pesanan", Toast.LENGTH_LONG).show()
-                    hapusSemuaItem()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, "Gagal menambahkan pesanan", Toast.LENGTH_LONG).show()
-                }
+            penggunaRef.get().addOnSuccessListener {
+                val pengguna = it.toObject(Pengguna::class.java)
+                val transaksiUserId = transaksi.copy(
+                    idPengguna = authRepository.getUserId(),
+                    namaPengguna = pengguna?.nama ?: ""
+                )
+                transaksiRef.add(transaksiUserId)
+                    .addOnSuccessListener {
+                        Toast.makeText( context,"Berhasil menambahkan pesanan", Toast.LENGTH_LONG).show()
+                        hapusSemuaItem()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Gagal menambahkan pesanan", Toast.LENGTH_LONG).show()
+                    }
+            }
         }
     }
 }

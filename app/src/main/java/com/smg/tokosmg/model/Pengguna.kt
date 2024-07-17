@@ -8,8 +8,6 @@ data class Pengguna (
     val fotoProfil: String = "",
     val nomorHp: String = "",
     val keranjang: List<ProdukItem> = emptyList(),
-    val tanggalDaftar: Timestamp = Timestamp.now()
+    val tanggalDaftar: Timestamp = Timestamp.now(),
+    val isAdmin: Boolean = false
 )
-
-
-

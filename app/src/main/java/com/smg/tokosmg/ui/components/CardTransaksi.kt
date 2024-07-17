@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,10 +32,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.smg.tokosmg.R
 import com.smg.tokosmg.model.Transaksi
-import com.smg.tokosmg.ui.theme.failed
 import com.smg.tokosmg.ui.theme.interFontFamily
-import com.smg.tokosmg.ui.theme.success
-import com.smg.tokosmg.ui.theme.waiting
 import com.smg.tokosmg.util.rupiahFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -88,13 +84,13 @@ fun CardTransaksi (transaksi: Transaksi) {
                 
                 Box(
                     modifier = Modifier
-                        .clip(shape = MaterialTheme.shapes.large)
+                        .clip(shape = MaterialTheme.shapes.extraSmall)
                         .background(
                             color = when (transaksi.statusTransaksi) {
-                                "Menunggu Konfirmasi" -> waiting
-                                "Silahkan Ambil" -> success
-                                "Selesai" -> MaterialTheme.colorScheme.secondaryContainer
-                                else -> failed
+                                "Menunggu Konfirmasi" -> MaterialTheme.colorScheme.tertiary
+                                "Diterima" -> MaterialTheme.colorScheme.primaryContainer
+                                "Selesai" -> MaterialTheme.colorScheme.primary
+                                else -> MaterialTheme.colorScheme.error
                             }
                         )
                 ) {

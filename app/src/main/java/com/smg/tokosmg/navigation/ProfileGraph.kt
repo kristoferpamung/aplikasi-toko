@@ -24,41 +24,7 @@ fun NavGraphBuilder.profileGraph (
         composable(
             route = NestedRoutes.Profile.name
         ) {
-            ProfileScreen (
-                navigateToHome = {
-                    navController.popBackStack()
-                }
-            )
-        }
-    }
-}
 
-@Composable
-fun HomeScreenCoba(
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Home")
-    }
-}
-
-
-
-@Composable
-fun ProfileScreen (
-    navigateToHome: () -> Unit
-) {
-    Column (
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = { navigateToHome.invoke() }
-        ) {
-            Text(text = "kembali")
         }
     }
 }

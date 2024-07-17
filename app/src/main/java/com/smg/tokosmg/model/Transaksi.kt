@@ -7,6 +7,7 @@ data class Transaksi (
     @DocumentId val idTransaksi : String = "",
     val tanggal : Timestamp = Timestamp.now(),
     val idPengguna : String = "",
+    val namaPengguna: String= "",
     val idKasir : String = "",
     val statusTransaksi : String = "Menunggu Konfirmasi",
     val total : Long = 0,

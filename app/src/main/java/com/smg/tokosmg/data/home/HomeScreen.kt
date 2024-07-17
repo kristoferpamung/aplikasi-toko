@@ -19,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -29,6 +28,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +39,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -48,6 +50,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.smg.tokosmg.NotificationService
 import com.smg.tokosmg.R
 import com.smg.tokosmg.navigation.BottomAppSceen
 import com.smg.tokosmg.navigation.BottomNavGraph
@@ -58,10 +61,10 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 fun HomeScreen (
     homeViewModel: HomeViewModel = viewModel(HomeViewModel::class.java),
     navigateToLogin: () -> Unit,
-    navigateToProfile: () -> Unit,
-    navigateToNotification: () -> Unit
+    navigateToProfile: () -> Unit
 ) {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
     var showMenu by remember {
         mutableStateOf(false)
@@ -69,6 +72,21 @@ fun HomeScreen (
 
     LaunchedEffect(key1 = Unit) {
         homeViewModel.getUser()
+    }
+
+    val listTransaksi by homeViewModel.listTransaksi.collectAsState()
+
+    LaunchedEffect(key1 = listTransaksi) {
+        val diterima = listTransaksi.filter {
+            it.statusTransaksi == "Diterima"
+        }
+
+        if (diterima.isNotEmpty()){
+            diterima.forEach {
+                val notificationService = NotificationService(context = context, transaksi = it)
+                notificationService.showNotification()
+            }
+        }
     }
 
     Scaffold (
@@ -86,17 +104,6 @@ fun HomeScreen (
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            navigateToNotification.invoke()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.bell_fill),
-                            contentDescription = "notification icon",
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
                     AsyncImage(
                         model = homeViewModel.currentUser.user.data?.fotoProfil,
                         contentDescription = "Foto Profil",
@@ -204,9 +211,15 @@ fun HomeScreen (
                     ) {
                         Text(
                             text = homeViewModel.currentUser.user.data?.nama ?: "",
+                            textDecoration = TextDecoration.Underline,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontFamily = interFontFamily
-                            )
+                            ),
+                            modifier = Modifier.clickable {
+                                homeViewModel.currentUser.user.data?.let {
+                                    navigateToProfile.invoke()
+                                }
+                            }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(
