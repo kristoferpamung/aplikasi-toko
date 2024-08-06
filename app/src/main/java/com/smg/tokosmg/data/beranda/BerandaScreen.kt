@@ -151,7 +151,7 @@ fun BerandaScreen (
                 ) {
                     itemsIndexed(filterProduct ?: emptyList()) { index, produk ->
                         ProductCard(
-                            imgUrl = produk.gambar,
+                            productId = produk.id,
                             prices = produk.hargaProduk,
                             quantity = produk.stok,
                             productUnit = produk.satuan,
@@ -186,6 +186,7 @@ fun BerandaScreen (
             jumlah = jumlahBarang.toLong(),
             harga = hargaProduk[seletedChip].harga,
             satuan = hargaProduk[seletedChip].satuan,
+            bobot = hargaProduk[seletedChip].amount,
             subTotal = hargaProduk[seletedChip].harga.times(jumlahBarang)
         )
 
@@ -194,6 +195,8 @@ fun BerandaScreen (
                 openAlertDialog = !openAlertDialog
             }
         ) {
+            val imgUrl = "https://firebasestorage.googleapis.com/v0/b/toko-smg-da935.appspot.com/o/products%2F${selectedProduct.id}.jpg?alt=media&token=fef749a9-24a0-4529-bf97-4e20552f961a"
+
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -212,7 +215,8 @@ fun BerandaScreen (
                         contentAlignment = Alignment.TopEnd
                     ) {
                         AsyncImage(
-                            model = selectedProduct.gambar,
+                            model = imgUrl,
+                            error = painterResource(id = R.drawable.no_product_img),
                             contentScale = ContentScale.Crop,
                             contentDescription = "",
                             modifier = Modifier
@@ -247,9 +251,14 @@ fun BerandaScreen (
                                 modifier = Modifier
                                     .padding(all = 8.dp)
                                     .background(
-                                        color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(
-                                            alpha = 0.8f
-                                        ),
+                                        color = if (selectedProduct.stok <= 0) {
+                                            MaterialTheme.colorScheme.error.copy(
+                                                alpha = 0.8f
+                                            )
+                                        } else { MaterialTheme.colorScheme.surfaceContainerLowest.copy(
+                                                alpha = 0.8f
+                                            )
+                                        },
                                         shape = MaterialTheme.shapes.large
                                     )
                                     .padding(horizontal = 4.dp, vertical = 2.dp),
@@ -265,7 +274,9 @@ fun BerandaScreen (
                                         modifier = Modifier.size(10.dp)
                                     )
                                     Text(
-                                        text = "${selectedProduct.stok} ${selectedProduct.satuan}",
+                                        text = if (selectedProduct.stok <= 0) { "Stok Habis" } else {
+                                            "${selectedProduct.stok} ${selectedProduct.satuan}"
+                                        },
                                         style = MaterialTheme.typography.bodySmall.copy(
                                             fontFamily = interFontFamily,
                                             fontSize = 10.sp
@@ -355,6 +366,7 @@ fun BerandaScreen (
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
+                        enabled = selectedProduct.stok > 0,
                         onClick = {
                             berandaViewModel.updateKeranjang(context =context, produkItem = produkItem)
                             openAlertDialog = false

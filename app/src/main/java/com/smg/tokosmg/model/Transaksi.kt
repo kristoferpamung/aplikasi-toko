@@ -13,5 +13,6 @@ data class Transaksi (
     val total : Long = 0,
     val bayar: Long = 0,
     val kembalian: Long = 0,
+    val expiredDate: Timestamp = Timestamp.now(),
     val item: List<ProdukItem> = emptyList()
 )

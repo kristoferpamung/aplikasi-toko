@@ -1,6 +1,5 @@
 package com.smg.tokosmg.ui.components
 
-import android.app.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +43,7 @@ import com.smg.tokosmg.util.rupiahFormat
 
 @Composable
 fun ProductCardSmall(
-    image: String,
+    productId: String,
     produkItem: ProdukItem,
     stok: Long,
     onQuantityChange: (ProdukItem, Int) -> Unit,
@@ -53,6 +52,7 @@ fun ProductCardSmall(
     var showDialog by remember {
         mutableStateOf(false)
     }
+    val imgUrl = "https://firebasestorage.googleapis.com/v0/b/toko-smg-da935.appspot.com/o/products%2F$productId.jpg?alt=media&token=fef749a9-24a0-4529-bf97-4e20552f961a"
 
     val formatHargaRupiah = rupiahFormat(produkItem.subTotal)
     Card (
@@ -68,7 +68,8 @@ fun ProductCardSmall(
                 .padding(12.dp)
         ) {
             AsyncImage(
-                model = image,
+                model = imgUrl,
+                error = painterResource(id = R.drawable.no_product_img),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

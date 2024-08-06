@@ -31,9 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.smg.tokosmg.R
-import com.smg.tokosmg.model.HargaProduk
 import com.smg.tokosmg.ui.theme.interFontFamily
-import com.smg.tokosmg.util.rupiahFormat
 
 @Composable
 fun CustomAlertDialog (
@@ -41,8 +39,7 @@ fun CustomAlertDialog (
     name: String,
     imgUrl: String,
     quantity: String,
-    productUnit : String,
-    prices: List<HargaProduk>
+    productUnit : String
 ) {
     Dialog(
         onDismissRequest = { onDismissRequest.invoke() }

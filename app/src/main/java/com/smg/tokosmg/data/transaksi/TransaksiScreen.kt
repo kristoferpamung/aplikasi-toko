@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,7 +42,10 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import com.google.firebase.Timestamp
 import com.smg.tokosmg.R
+import kotlinx.coroutines.delay
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun TransaksiScreen (

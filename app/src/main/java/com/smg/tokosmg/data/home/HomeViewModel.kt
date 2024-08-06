@@ -1,5 +1,6 @@
 package com.smg.tokosmg.data.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,7 @@ class HomeViewModel (
 ) : ViewModel() {
 
     val db = FirebaseFirestore.getInstance().collection("transaksi")
+    val userDb = FirebaseFirestore.getInstance().collection("users")
     private val idUser = FirebaseAuth.getInstance().currentUser?.uid
     private var listenerRegistration : ListenerRegistration? = null
 
@@ -48,7 +50,7 @@ class HomeViewModel (
 
     fun logout () = authRepository.logOut()
 
-    fun fetchTransaksiDiterima() {
+    private fun fetchTransaksiDiterima() {
 
         listenerRegistration = db
             .whereEqualTo("idPengguna", idUser)
@@ -60,6 +62,19 @@ class HomeViewModel (
                 if (value != null && !value.isEmpty) {
                     val productList = value.toObjects(Transaksi::class.java)
                     _listTransaksi.value = productList
+                }
+        }
+    }
+
+    fun editUsername (nama: String, onSuccess: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            userDb.document(idUser.orEmpty())
+                .update("nama", nama)
+                .addOnSuccessListener {
+                    onSuccess.invoke(true)
+                }
+                .addOnSuccessListener {
+                    onSuccess.invoke(false)
                 }
         }
     }

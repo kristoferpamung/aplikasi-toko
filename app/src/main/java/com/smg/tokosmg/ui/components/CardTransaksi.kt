@@ -17,7 +17,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,14 +30,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Timestamp
 import com.smg.tokosmg.R
 import com.smg.tokosmg.model.Transaksi
 import com.smg.tokosmg.ui.theme.interFontFamily
 import com.smg.tokosmg.util.rupiahFormat
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun CardTransaksi (transaksi: Transaksi) {
@@ -87,20 +93,24 @@ fun CardTransaksi (transaksi: Transaksi) {
                         .clip(shape = MaterialTheme.shapes.extraSmall)
                         .background(
                             color = when (transaksi.statusTransaksi) {
-                                "Menunggu Konfirmasi" -> MaterialTheme.colorScheme.tertiary
+                                "Menunggu Konfirmasi" -> MaterialTheme.colorScheme.error
                                 "Diterima" -> MaterialTheme.colorScheme.primaryContainer
                                 "Selesai" -> MaterialTheme.colorScheme.primary
                                 else -> MaterialTheme.colorScheme.error
                             }
                         )
                 ) {
-                    Text(
-                        text = transaksi.statusTransaksi,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.surfaceContainerLowest
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
+                    if (transaksi.statusTransaksi == "Menunggu Konfirmasi") {
+                        CountdownTimer(expirationTime = transaksi.expiredDate)
+                    } else {
+                        Text(
+                            text = transaksi.statusTransaksi,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.surfaceContainerLowest
+                            ),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
             }
             Text(text = buildAnnotatedString {
@@ -209,4 +219,40 @@ fun CardTransaksi (transaksi: Transaksi) {
             }
         }
     }
+}
+
+@Composable
+fun CountdownTimer(expirationTime: Timestamp) {
+    var remainingTime by remember { mutableLongStateOf(calculateRemainingTime(expirationTime)) }
+
+    // This LaunchedEffect will update the remaining time every second
+    LaunchedEffect(expirationTime) {
+        while (remainingTime > 0) {
+            delay(1000L)
+            remainingTime = calculateRemainingTime(expirationTime)
+        }
+    }
+
+    // Display the remaining time in Minutes:Seconds format
+    Text(
+        text = formatTime(remainingTime),
+        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.surfaceContainerLowest),
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+}
+
+
+// Function to calculate the remaining time in milliseconds
+private fun calculateRemainingTime(expirationTime: Timestamp): Long {
+    val currentTime = System.currentTimeMillis()
+    val expirationTimeInMillis = expirationTime.toDate().time
+    return expirationTimeInMillis - currentTime
+}
+
+// Function to format the remaining time in Minutes:Seconds format
+private fun formatTime(timeInMillis: Long): String {
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(timeInMillis)
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(timeInMillis) % 60
+    return String.format("%02d:%02d", minutes, seconds)
 }

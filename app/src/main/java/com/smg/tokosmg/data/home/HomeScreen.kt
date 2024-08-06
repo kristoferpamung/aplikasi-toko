@@ -2,6 +2,7 @@ package com.smg.tokosmg.data.home
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +50,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.smg.tokosmg.NotificationService
 import com.smg.tokosmg.R
+import com.smg.tokosmg.data.keranjang.KeranjangViewModel
 import com.smg.tokosmg.navigation.BottomAppSceen
 import com.smg.tokosmg.navigation.BottomNavGraph
 import com.smg.tokosmg.ui.theme.interFontFamily
@@ -60,6 +65,7 @@ import com.smg.tokosmg.ui.theme.interFontFamily
 @Composable
 fun HomeScreen (
     homeViewModel: HomeViewModel = viewModel(HomeViewModel::class.java),
+    keranjangViewModel: KeranjangViewModel = viewModel(modelClass = KeranjangViewModel::class.java),
     navigateToLogin: () -> Unit,
     navigateToProfile: () -> Unit
 ) {
@@ -70,15 +76,43 @@ fun HomeScreen (
         mutableStateOf(false)
     }
 
+
+
     LaunchedEffect(key1 = Unit) {
         homeViewModel.getUser()
     }
 
     val listTransaksi by homeViewModel.listTransaksi.collectAsState()
+    val userId = Firebase.auth.currentUser?.uid
+    val db = FirebaseFirestore.getInstance()
+    val userProfile = "https://firebasestorage.googleapis.com/v0/b/toko-smg-da935.appspot.com/o/images%2F$userId?alt=media&token=c668883c-f6f7-4892-95e7-03b509e79b87"
 
     LaunchedEffect(key1 = listTransaksi) {
         val diterima = listTransaksi.filter {
             it.statusTransaksi == "Diterima"
+        }
+
+        val ditunggu = listTransaksi.filter {
+            it.statusTransaksi == "Menunggu Konfirmasi"
+        }
+
+        if (ditunggu.isNotEmpty()){
+            ditunggu.forEach {
+                if (it.expiredDate < Timestamp.now()) {
+                    keranjangViewModel.tambahStok(listItem = it.item, onSuccess = {
+                        db.collection("transaksi")
+                            .document(it.idTransaksi)
+                            .update("statusTransaksi", "Gagal")
+                            .addOnCompleteListener { i ->
+                                if (i.isSuccessful) {
+                                    Log.d("HomeScreen", "HomeScreen: status diganti")
+                                } else {
+                                    Log.d("HomeScreen", "HomeScreen: status tidak diganti")
+                                }
+                            }
+                    })
+                }
+            }
         }
 
         if (diterima.isNotEmpty()){
@@ -104,17 +138,24 @@ fun HomeScreen (
                     )
                 },
                 actions = {
-                    AsyncImage(
-                        model = homeViewModel.currentUser.user.data?.fotoProfil,
-                        contentDescription = "Foto Profil",
-                        contentScale = ContentScale.Crop,
+                    Box(
                         modifier = Modifier
                             .size(32.dp)
-                            .clip(shape = CircleShape)
+                            .clip(CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline,
+                                shape = CircleShape
+                            )
                             .clickable {
                                 showMenu = !showMenu
-                            }
-                    )
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        AsyncImage(model = userProfile, contentDescription = "", error = painterResource(
+                            id = R.drawable.person
+                        ))
+                    }
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             )
@@ -174,7 +215,6 @@ fun HomeScreen (
                                 }
                                 launchSingleTop = true
                                 restoreState = true
-                                Log.d("selected", "HomeScreen: $selected")
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(

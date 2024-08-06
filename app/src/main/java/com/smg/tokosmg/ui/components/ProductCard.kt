@@ -1,8 +1,6 @@
 package com.smg.tokosmg.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,12 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,13 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,12 +40,10 @@ import com.smg.tokosmg.model.HargaProduk
 import com.smg.tokosmg.ui.theme.TokoSMGTheme
 import com.smg.tokosmg.ui.theme.interFontFamily
 import com.smg.tokosmg.util.rupiahFormat
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun ProductCard (
-    imgUrl: String,
+    productId: String,
     prices: List<HargaProduk>,
     quantity: Number,
     productUnit: String,
@@ -64,6 +52,7 @@ fun ProductCard (
 ) {
 
     val hargaProduk = prices.sortedBy { it.harga }
+    val imgUrl = "https://firebasestorage.googleapis.com/v0/b/toko-smg-da935.appspot.com/o/products%2F$productId.jpg?alt=media&token=fef749a9-24a0-4529-bf97-4e20552f961a"
 
     var seletedChip by remember {
         mutableIntStateOf(0)
@@ -94,6 +83,7 @@ fun ProductCard (
             ) {
                 AsyncImage(
                     model = imgUrl,
+                    error = painterResource(id = R.drawable.no_product_img),
                     contentDescription = "product image",
                     modifier = Modifier
                         .fillMaxSize()
@@ -104,7 +94,11 @@ fun ProductCard (
                     modifier = Modifier
                         .padding(all = 8.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.8f),
+                            color = if (quantity.toLong() <= 0) {
+                                MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                            } else {
+                                MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.8f)
+                            },
                             shape = MaterialTheme.shapes.large
                         )
                         .padding(horizontal = 4.dp, vertical = 2.dp),
@@ -120,7 +114,11 @@ fun ProductCard (
                             modifier = Modifier.size(10.dp)
                         )
                         Text(
-                            text = "$quantity $productUnit",
+                            text = if (quantity.toLong() <= 0) {
+                                "Stok Habis"
+                            } else {
+                                "$quantity $productUnit"
+                            },
                             style = MaterialTheme.typography.bodySmall.copy(
                                 fontFamily = interFontFamily,
                                 fontSize = 10.sp
